@@ -6,9 +6,9 @@
 
 import os
 import pickle
+import tensorflow as tf
 import numpy as np
 from ...utils import common_utils
-import tensorflow as tf
 from waymo_open_dataset.utils import frame_utils, transform_utils, range_image_utils
 from waymo_open_dataset import dataset_pb2
 
@@ -264,5 +264,4 @@ def process_single_sequence(sequence_file, save_path, sampled_interval, has_labe
 
     print('Infos are saved to (sampled_interval=%d): %s' % (sampled_interval, pkl_file))
     return sequence_infos
-
 

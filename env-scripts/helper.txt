@@ -1,0 +1,7 @@
+# cd env-scripts
+# bash setup.sh
+# pip install spconv-cu113
+# python setup.py develop
+# pip install numba
+# pip install scikit-image
+# pip install SharedArray

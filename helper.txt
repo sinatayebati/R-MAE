@@ -1,0 +1,21 @@
+Pretrain with multiple GPUs:
+bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml
+
+Pretrain with a single GPU:
+python3 train_ssl.py  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml --batch_size 4
+
+---------------------
+
+Train with multiple GPUs:
+bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/pv_rcnn.yaml --pretrained_model ../output/waymo_models/radial_mae_waymo_0.9/default/ckpt/checkpoint_epoch_30.pth
+
+
+
+
+
+
+
+
+
+
+Later, I realized that the FILTER_EMPTY_BOXES_FOR_TRAIN (in step 3) can be set as True as in the original code for (supervised) training. But the performance goes very low, like 0.06/0.06 for vehicles, 0.10/0.09 for pedestrian. I am wondering what should this variable be for pre-training and training?
