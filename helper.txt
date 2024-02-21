@@ -17,5 +17,13 @@ bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/pv_rcnn.yaml --pretr
 
 
 
+--dataroot', type=str, default='/data/sets/nuscenes
+
+self,
+                 version: str = 'v1.0-mini',
+                 dataroot: str = '/data/sets/nuscenes',
+                 verbose: bool = True,
+                 map_resolution: float = 0.1):
+
 
 Later, I realized that the FILTER_EMPTY_BOXES_FOR_TRAIN (in step 3) can be set as True as in the original code for (supervised) training. But the performance goes very low, like 0.06/0.06 for vehicles, 0.10/0.09 for pedestrian. I am wondering what should this variable be for pre-training and training?
