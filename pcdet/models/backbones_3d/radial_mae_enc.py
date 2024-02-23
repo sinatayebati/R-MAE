@@ -12,24 +12,26 @@ from .spconv_backbone import post_act_block
 class SparseBasicBlock(spconv.SparseModule):
     expansion = 1
 
-    def __init__(self, inplanes, planes, stride=1, downsample=None, indice_key=None, norm_fn=None):
+    def __init__(self, inplanes, planes, stride=1, bias=None, norm_fn=None, downsample=None, indice_key=None):
         super(SparseBasicBlock, self).__init__()
+
+        assert norm_fn is not None
+        if bias is None:
+            bias = norm_fn is not None
         self.conv1 = spconv.SubMConv3d(
-            inplanes, planes, kernel_size=3, stride=stride, padding=1, bias=False, indice_key=indice_key
+            inplanes, planes, kernel_size=3, stride=stride, padding=1, bias=bias, indice_key=indice_key
         )
         self.bn1 = norm_fn(planes)
         self.relu = nn.ReLU()
         self.conv2 = spconv.SubMConv3d(
-            planes, planes, kernel_size=3, stride=1, padding=1, bias=False, indice_key=indice_key
+            planes, planes, kernel_size=3, stride=stride, padding=1, bias=bias, indice_key=indice_key
         )
         self.bn2 = norm_fn(planes)
         self.downsample = downsample
         self.stride = stride
 
     def forward(self, x):
-        identity = x.features
-
-        assert x.features.dim() == 2, 'x.features.dim()=%d' % x.features.dim()
+        identity = x
 
         out = self.conv1(x)
         out = replace_feature(out, self.bn1(out.features))
@@ -41,7 +43,7 @@ class SparseBasicBlock(spconv.SparseModule):
         if self.downsample is not None:
             identity = self.downsample(x)
 
-        out = replace_feature(out, out.features + identity)
+        out = replace_feature(out, out.features + identity.features)
         out = replace_feature(out, self.relu(out.features))
 
         return out
