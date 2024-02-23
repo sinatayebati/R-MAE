@@ -1,29 +1,28 @@
-Pretrain with multiple GPUs:
+# Pretrain with multiple GPUs:
 bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml
 
-Pretrain with a single GPU:
+# Pretrain with a single GPU:
 python3 train_ssl.py  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml --batch_size 4
 
 ---------------------
 
-Train with multiple GPUs:
+# Train with multiple GPUs:
 bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/pv_rcnn.yaml --pretrained_model ../output/waymo_models/radial_mae_waymo_0.9/default/ckpt/checkpoint_epoch_30.pth
 
 
 
 
 
+# Train bevfusion
+bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/transfusion_lidar.yaml
+
+bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/bevfusion.yaml \
+--pretrained_model ../output/nuscenes_models/transfusion_lidar/default/ckpt/cbgs_transfusion_lidar.pth
+
+# Eval
+bash scripts/dist_test.sh 2 --cfg_file  cfgs/nuscenes_models/bevfusion.yaml \
+--ckpt ../output/nuscenes_models/bevfusion/default/ckpt/checkpoint_epoch_6.pth
 
 
+--num_epochs_to_eval 1
 
-
---dataroot', type=str, default='/data/sets/nuscenes
-
-self,
-                 version: str = 'v1.0-mini',
-                 dataroot: str = '/data/sets/nuscenes',
-                 verbose: bool = True,
-                 map_resolution: float = 0.1):
-
-
-Later, I realized that the FILTER_EMPTY_BOXES_FOR_TRAIN (in step 3) can be set as True as in the original code for (supervised) training. But the performance goes very low, like 0.06/0.06 for vehicles, 0.10/0.09 for pedestrian. I am wondering what should this variable be for pre-training and training?

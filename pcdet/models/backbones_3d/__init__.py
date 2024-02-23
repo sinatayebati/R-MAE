@@ -11,6 +11,7 @@ from .voxel_mae_res import Voxel_MAE_res
 from .radial_mae import Radial_MAE
 from .radial_mae_ra import Radial_MAE_ra
 from .radial_mae_res import Radial_MAE_res
+from .radial_mae_enc import Radial_MAE_enc
 
 
 __all__ = {
@@ -30,4 +31,5 @@ __all__ = {
     'Radial_MAE' : Radial_MAE,
     'Radial_MAE_ra' : Radial_MAE_ra,
     'Radial_MAE_res': Radial_MAE_res,
+    'Radial_MAE_enc': Radial_MAE_enc,
 }
