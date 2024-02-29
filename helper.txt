@@ -1,5 +1,5 @@
 # Pretrain with multiple GPUs:
-bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml
+bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/nuscenes_models/radial_mae_res_nuscenes.yaml
 
 # Pretrain with a single GPU:
 python3 train_ssl.py  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml --batch_size 4
@@ -14,13 +14,12 @@ bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/pv_rcnn.yaml --pretr
 
 
 # Train bevfusion
-bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/transfusion_lidar.yaml
-
-bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/transfusion_lidar_mae.yaml
-
+bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/transfusion_lidar.yaml \
+--pretrained_model ../output/nuscenes_models/radial_mae_res_nuscenes/default/ckpt/checkpoint_epoch_20.pth
 
 bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/bevfusion.yaml \
---pretrained_model ../output/nuscenes_models/transfusion_lidar/default/ckpt/cbgs_transfusion_lidar.pth
+--pretrained_model ../output/nuscenes_models/transfusion_lidar/default/ckpt/checkpoint_epoch_20.pth
+
 
 # Eval
 bash scripts/dist_test.sh 2 --cfg_file  cfgs/nuscenes_models/bevfusion.yaml \

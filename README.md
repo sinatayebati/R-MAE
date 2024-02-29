@@ -8,7 +8,7 @@ Please refer to [GETTING_STARTED.md](docs/GETTING_STARTED.md) .
 
 ## Usage
 
-### SSL Pre-training Radial MAE
+### Pre-training Radial MAE
 
 ### KITTI:
 
@@ -34,16 +34,17 @@ bash ./scripts/dist_train_mae.sh ${NUM_GPUS} \
 
 ```shell
 bash ./scripts/dist_train_mae.sh ${NUM_GPUS} \
-  --cfg_file cfgs/nuscenes_models/radial_mae_nuescenes.yaml
+  --cfg_file cfgs/nuscenes_models/radial_mae_res_nuescenes.yaml
 ```
 
-### Traing Detection Head
+### Finetuning
 
 Train with multiple GPUs:
+* example of fintetuning Radial_MAE checkpoint on Waymo using PVRCNN
 ```shell
 bash ./scripts/dist_train.sh ${NUM_GPUS} \
-  --cfg_file cfgs/kitti_models/pv_rcnn.yaml \
-  --pretrained_model ../output/kitti_models/radial_mae_pretrain_kitti_0.9/default/ckpt/checkpoint_epoch_30.pth
+  --cfg_file cfgs/waymo_models/pv_rcnn.yaml \
+  --pretrained_model ../output/waymo_models/radial_mae_waymo/default/ckpt/checkpoint_epoch_30.pth
 ```
 
 ## Performance
@@ -57,14 +58,14 @@ Performance comparison on the kitti val split evaluated by the ap with 40 recall
 | [PointPillar](tools/cfgs/kitti_models/pointpillar.yaml) | 75.60 | 41.98 | 60.27 | [ckpt]() | 
 | [SECOND](tools/cfgs/kitti_models/second.yaml)       | - | - | - | [ckpt]() |
 | [PV-RCNN](tools/cfgs/kitti_models/pv_rcnn.yaml) | - | - | - | [ckpt]() |
-| [Radia-MAE]() | 82.73 | 52.77 | 72.85 | [ckpt]() |
+| [Radia-MAE + PV-RCNN]() | 82.73 | 52.77 | 72.85 | [ckpt]() |
 
 
 
 
 ### Waymo Open Dataset
 
-All models are trained with **a single frame** of **20% data (~32k frames)** of all the training samples on 2 RTX A6000 GPUs, and the results of each cell here are mAP/mAPH calculated by the official Waymo evaluation metrics on the **whole** validation set (version 1.2).    
+All models are trained with **a single frame** of **20% data (~32k frames)** of all the training samples on 2 RTX 6000 ADA GPUs, and the results of each cell here are mAP/mAPH calculated by the official Waymo evaluation metrics on the **whole** validation set (version 1.2).    
 
 |    Performance@(train with 20\% Data)            | Vec_L1 | Vec_L2 | Ped_L1 | Ped_L2 | Cyc_L1 | Cyc_L2 |  
 |---------------------------------------------|----------:|:-------:|:-------:|:-------:|:-------:|:-------:|
@@ -81,6 +82,19 @@ All models are trained with **a single frame** of **20% data (~32k frames)** of 
 
 
 ### nuScenes Dataset 
+
+All models are trained with 2 RTX 6000 ADA GPUs and are available for download.
+
+|                                                                                                    |   mATE |  mASE  |  mAOE  | mAVE  | mAAE  |  mAP  |  NDS   |                                              download                                              | 
+|----------------------------------------------------------------------------------------------------|-------:|:------:|:------:|:-----:|:-----:|:-----:|:------:|:--------------------------------------------------------------------------------------------------:|
+| [PointPillar-MultiHead](tools/cfgs/nuscenes_models/cbgs_pp_multihead.yaml)                         | -	 | - | -	 | - | - | - | - |  [model-23M]()   | 
+| [SECOND-MultiHead (CBGS)](tools/cfgs/nuscenes_models/cbgs_second_multihead.yaml)                   | - | 	- | - | - | - | - | -  |  [model-35M]()   |
+| [CenterPoint-PointPillar](tools/cfgs/nuscenes_models/cbgs_dyn_pp_centerpoint.yaml)                 |  - |	- | - | - | - | - | -  |  [model-23M]()   |
+| [CenterPoint (voxel_size=0.1)](tools/cfgs/nuscenes_models/cbgs_voxel01_res3d_centerpoint.yaml)     |  - | - | - | - | - |  |   |  [model-34M]()   |
+| [CenterPoint (voxel_size=0.075)](tools/cfgs/nuscenes_models/cbgs_voxel0075_res3d_centerpoint.yaml) | -  | -	 | 	- | - | - | - | - |  [model-34M]()   |
+| [VoxelNeXt (voxel_size=0.075)](tools/cfgs/nuscenes_models/cbgs_voxel0075_voxelnext.yaml)   |  - | 	- | 	- | - | - | - | - | [model-31M]() |
+| [Radial-MAE + TransFusion-L](tools/cfgs/nuscenes_models/transfusion_lidar.yaml)   |  29.88 | 	25.49 | 	29.02 | 29.10 | 19.04 | 62.80 | 68.15  | [model-32M]() |
+| [BEVFusion](tools/cfgs/nuscenes_models/bevfusion.yaml)   |  28.28 | 	25.43 | 	28.88 | 26.80 | 18.59 | 65.99 | 70.20  | [model-157M]() |
 
 
 ##  License
