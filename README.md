@@ -85,16 +85,17 @@ All models are trained with **a single frame** of **20% data (~32k frames)** of 
 
 All models are trained with 2 RTX 6000 ADA GPUs and are available for download.
 
-|                                                                                                    |   mATE |  mASE  |  mAOE  | mAVE  | mAAE  |  mAP  |  NDS   |                                              download                                              | 
-|----------------------------------------------------------------------------------------------------|-------:|:------:|:------:|:-----:|:-----:|:-----:|:------:|:--------------------------------------------------------------------------------------------------:|
-| [PointPillar-MultiHead](tools/cfgs/nuscenes_models/cbgs_pp_multihead.yaml)                         | -	 | - | -	 | - | - | - | - |  [model-23M]()   | 
-| [SECOND-MultiHead (CBGS)](tools/cfgs/nuscenes_models/cbgs_second_multihead.yaml)                   | - | 	- | - | - | - | - | -  |  [model-35M]()   |
-| [CenterPoint-PointPillar](tools/cfgs/nuscenes_models/cbgs_dyn_pp_centerpoint.yaml)                 |  - |	- | - | - | - | - | -  |  [model-23M]()   |
-| [CenterPoint (voxel_size=0.1)](tools/cfgs/nuscenes_models/cbgs_voxel01_res3d_centerpoint.yaml)     |  - | - | - | - | - |  |   |  [model-34M]()   |
-| [CenterPoint (voxel_size=0.075)](tools/cfgs/nuscenes_models/cbgs_voxel0075_res3d_centerpoint.yaml) | -  | -	 | 	- | - | - | - | - |  [model-34M]()   |
-| [VoxelNeXt (voxel_size=0.075)](tools/cfgs/nuscenes_models/cbgs_voxel0075_voxelnext.yaml)   |  - | 	- | 	- | - | - | - | - | [model-31M]() |
-| [Radial-MAE + TransFusion-L](tools/cfgs/nuscenes_models/transfusion_lidar.yaml)   |  29.88 | 	25.49 | 	29.02 | 29.10 | 19.04 | 62.80 | 68.15  | [model-32M]() |
-| [BEVFusion](tools/cfgs/nuscenes_models/bevfusion.yaml)   |  28.28 | 	25.43 | 	28.88 | 26.80 | 18.59 | 65.99 | 70.20  | [model-157M]() |
+|                                                                                                    | Modality |  mATE |  mASE  |  mAOE  | mAVE  | mAAE  |  mAP  |  NDS   |                                              download                                              | 
+|----------------------------------------------------------------------------------------------------|----------|------:|:------:|:------:|:-----:|:-----:|:-----:|:------:|:--------------------------------------------------------------------------------------------------:|
+| [PointPillar-MultiHead](tools/cfgs/nuscenes_models/cbgs_pp_multihead.yaml)                         | LiDAR    | 33.87 | 26.00  | 32.07  | 28.74 | 20.15 | 44.63 | 58.23  |  [model-23M](https://drive.google.com/file/d/1p-501mTWsq0G9RzroTWSXreIMyTUUpBM/view?usp=sharing)   | 
+| [SECOND-MultiHead (CBGS)](tools/cfgs/nuscenes_models/cbgs_second_multihead.yaml)                   | LiDAR    | 31.15 | 25.51  | 26.64  | 26.26 | 20.46 | 50.59 | 62.29  |  [model-35M](https://drive.google.com/file/d/1bNzcOnE3u9iooBFMk2xK7HqhdeQ_nwTq/view?usp=sharing)   |
+| [CenterPoint-PointPillar](tools/cfgs/nuscenes_models/cbgs_dyn_pp_centerpoint.yaml)                 | LiDAR    | 31.13 | 26.04  | 42.92  | 23.90 | 19.14 | 50.03 | 60.70  |  [model-23M](https://drive.google.com/file/d/1UvGm6mROMyJzeSRu7OD1leU_YWoAZG7v/view?usp=sharing)   |
+| [CenterPoint (voxel_size=0.1)](tools/cfgs/nuscenes_models/cbgs_voxel01_res3d_centerpoint.yaml)     | LiDAR    | 30.11 | 25.55  | 38.28  | 21.94 | 18.87 | 56.03 | 64.54  |  [model-34M](https://drive.google.com/file/d/1Cz-J1c3dw7JAWc25KRG1XQj8yCaOlexQ/view?usp=sharing)   |
+| [CenterPoint (voxel_size=0.075)](tools/cfgs/nuscenes_models/cbgs_voxel0075_res3d_centerpoint.yaml) | LiDAR    | 28.80 | 25.43  | 37.27  | 21.55 | 18.24 | 59.22 | 66.48  |  [model-34M](https://drive.google.com/file/d/1XOHAWm1MPkCKr1gqmc3TWi5AYZgPsgxU/view?usp=sharing)   |
+| [VoxelNeXt (voxel_size=0.075)](tools/cfgs/nuscenes_models/cbgs_voxel0075_voxelnext.yaml)           | LiDAR    | 30.11 | 25.23  | 40.57  | 21.69 | 18.56 | 60.53 | 66.65  | [model-31M](https://drive.google.com/file/d/1IV7e7G9X-61KXSjMGtQo579pzDNbhwvf/view?usp=share_link) |
+| [TransFusion-L + Radial-MAE](tools/cfgs/nuscenes_models/transfusion_lidar.yaml)                    | LiDAR    | 29.88 | 25.49  | 29.02  | 29.10 | 19.04 | 62.80 | 68.15  | [model-32M]() |
+| [BEVFusion + Radial-MAE](tools/cfgs/nuscenes_models/bevfusion.yaml)                                | LiDAR + Camera    | -     | -      | -      | -     | -     | -     | -      | [model-157M]() |
+
 
 
 ##  License

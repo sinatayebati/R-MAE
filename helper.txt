@@ -23,7 +23,7 @@ bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/bevfusion.yaml \
 
 # Eval
 bash scripts/dist_test.sh 2 --cfg_file  cfgs/nuscenes_models/bevfusion.yaml \
---ckpt ../output/nuscenes_models/bevfusion/default/ckpt/checkpoint_epoch_6.pth
+--ckpt ../output/nuscenes_models/bevfusion/default/ckpt/checkpoint_epoch_15.pth
 
 
 --num_epochs_to_eval 1
