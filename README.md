@@ -56,9 +56,11 @@ Performance comparison on the kitti val split evaluated by the ap with 40 recall
 |                                             | Car@R40 | Pedestrian@R40 | Cyclist@R40  | download | 
 |---------------------------------------------|:-------:|:--------------:|:------------:|:--------:|
 | [PointPillar](tools/cfgs/kitti_models/pointpillar.yaml) | 75.60 | 41.98 | 60.27 | [ckpt]() | 
-| [SECOND](tools/cfgs/kitti_models/second.yaml)       | - | - | - | [ckpt]() |
+| [SECOND](tools/cfgs/kitti_models/second.yaml)       | 73.66 | 42.56 | 53.85 | [ckpt]() |
+| [Radial-MAE (0.8) + SECOND]()       | 78.35 | 48.70 | 62.16  | [ckpt]() |
+| [Radial-MAE (0.9) + SECOND]()       | 76.46  | 48.16 | 62.26 | [ckpt]() |
 | [PV-RCNN](tools/cfgs/kitti_models/pv_rcnn.yaml) | - | - | - | [ckpt]() |
-| [Radia-MAE + PV-RCNN]() | 82.73 | 52.77 | 72.85 | [ckpt]() |
+| [Radial-MAE + PV-RCNN]() | 82.73 | 52.77 | 72.85 | [ckpt]() |
 
 
 

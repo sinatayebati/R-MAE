@@ -185,7 +185,7 @@ MODEL:
 
 
 OPTIMIZATION:
-    BATCH_SIZE_PER_GPU: 4
+    BATCH_SIZE_PER_GPU: 3
     NUM_EPOCHS: 20
 
     OPTIMIZER: adam_cosineanneal
