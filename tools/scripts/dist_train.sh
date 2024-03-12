@@ -19,6 +19,6 @@ done
 echo $PORT
 
 
-python -m torch.distributed.launch --nproc_per_node=${NGPUS} --rdzv_endpoint=localhost:${PORT} train.py --launcher pytorch ${PY_ARGS} --max_ckpt_save_num 15 
+python -m torch.distributed.launch --nproc_per_node=${NGPUS} --rdzv_endpoint=localhost:${PORT} train.py --launcher pytorch ${PY_ARGS} --max_ckpt_save_num 20
 
 

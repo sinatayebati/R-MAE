@@ -304,8 +304,8 @@ class DataAugmentor(object):
         data_dict['gt_boxes'][:, 6] = common_utils.limit_period(
             data_dict['gt_boxes'][:, 6], offset=0.5, period=2 * np.pi
         )
-        if 'calib' in data_dict:
-             data_dict.pop('calib')
+        # if 'calib' in data_dict:
+        #     data_dict.pop('calib')
         if 'road_plane' in data_dict:
             data_dict.pop('road_plane')
         if 'gt_boxes_mask' in data_dict:

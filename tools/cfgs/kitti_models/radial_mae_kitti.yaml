@@ -11,13 +11,13 @@ MODEL:
         NAME: MeanVFE
 
     BACKBONE_3D:
-        NAME: Radial_MAE_ra # calls pretraining backbone
-        MASKED_RATIO: 0.9  # masked_ratio for Voxel_MAE
+        NAME: Radial_MAE # calls pretraining backbone
+        MASKED_RATIO: 0.8  # masked_ratio for Voxel_MAE
         ANGULAR_RANGE: 1   # angular range for radial segmentation
 
 
 OPTIMIZATION:
-    BATCH_SIZE_PER_GPU: 12
+    BATCH_SIZE_PER_GPU: 2
     NUM_EPOCHS: 30
 
     OPTIMIZER: adam_onecycle

@@ -7,7 +7,7 @@ python3 train_ssl.py  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml --batch
 ---------------------
 
 # Train with multiple GPUs:
-bash ./scripts/dist_train.sh 2 --cfg_file cfgs/kitti_models/pv_rcnn.yaml --pretrained_model ../output/waymo_models/radial_mae_waymo_0.9/default/ckpt/checkpoint_epoch_30.pth
+bash ./scripts/dist_train.sh 2 --cfg_file cfgs/kitti_models/pv_rcnn.yaml --pretrained_model ../output/kitti_models/radial_mae_pretrain_kitti_0.9/default/ckpt/checkpoint_epoch_30.pth
 
 
 
@@ -24,7 +24,7 @@ bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/bevfusion.yaml \
 
 # Eval
 bash scripts/dist_test.sh 2 --cfg_file  cfgs/nuscenes_models/bevfusion.yaml \
---ckpt ../output/nuscenes_models/bevfusion/default/ckpt/checkpoint_epoch_6.pth
+--ckpt ../output/nuscenes_models/bevfusion/default/ckpt/checkpoint_epoch_20.pth
 
 
 --num_epochs_to_eval 1
