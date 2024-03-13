@@ -42,11 +42,14 @@ class SparseBasicBlock(spconv.SparseModule):
 
 
 class MultiHeadEncoder(nn.Module):
-    def __init__(self, input_channels, grid_size, voxel_size, point_cloud_range, num_heads=3):
+    def __init__(self, input_channels, grid_size, voxel_size, point_cloud_range, num_heads=2):
         super(MultiHeadEncoder, self).__init__()
         self.num_heads = num_heads
         self.heads = nn.ModuleList()
         norm_fn = partial(nn.BatchNorm1d, eps=1e-3, momentum=0.01)
+
+        # Retrieve last_pad from model_cfg, default to 0 if not specified
+        #last_pad = model_cfg.get('last_pad', 0)
 
         for _ in range(num_heads):
             head = spconv.SparseSequential(
@@ -89,9 +92,9 @@ class MultiHeadEncoder(nn.Module):
 
 
 
-class Radial_MAE(nn.Module):
+class Radial_MAE_multihead(nn.Module):
     def __init__(self, model_cfg, input_channels, grid_size, voxel_size, point_cloud_range, **kwargs):
-        super(Radial_MAE, self).__init__()
+        super().__init__()
         self.model_cfg = model_cfg
         self.sparse_shape = grid_size[::-1] + [1, 0, 0]
         self.voxel_size = voxel_size
@@ -99,8 +102,10 @@ class Radial_MAE(nn.Module):
         self.masked_ratio = model_cfg.get('MASKED_RATIO', 0.15)
         self.angular_range = model_cfg.get('ANGULAR_RANGE', 5)
 
-        norm_fn = partial(nn.BatchNorm1d, eps=1e-3, momentum=0.01)
-        self.encoder = MultiHeadEncoder(input_channels, norm_fn)
+        #norm_fn = partial(nn.BatchNorm1d, eps=1e-3, momentum=0.01)
+        self.encoder = MultiHeadEncoder(input_channels, grid_size, voxel_size, point_cloud_range, num_heads=2)
+        self.num_point_features = 8
+
 
         # Initialize the decoder
         self.decoder = nn.Sequential(
