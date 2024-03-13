@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import spconv
 from functools import partial
+import random
 
 from spconv.pytorch import SparseConvTensor
 from ...utils.spconv_utils import replace_feature, spconv
@@ -53,15 +54,22 @@ class MultiHeadEncoder(nn.Module):
                 norm_fn(16),
                 nn.ReLU(),
                 post_act_block(16, 16, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm1'),
+                # [1600, 1408, 41] <- [800, 704, 21]
                 post_act_block(16, 32, 3, stride=2, padding=1, norm_fn=norm_fn, indice_key='spconv2', conv_type='spconv'),
                 post_act_block(32, 32, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm2'),
                 post_act_block(32, 32, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm2'),
+                # [800, 704, 21] <- [400, 352, 11]
                 post_act_block(32, 64, 3, stride=2, padding=1, norm_fn=norm_fn, indice_key='spconv3', conv_type='spconv'),
                 post_act_block(64, 64, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm3'),
                 post_act_block(64, 64, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm3'),
+                # [400, 352, 11] <- [200, 176, 5]
                 post_act_block(64, 64, 3, stride=2, padding=(0, 1, 1), norm_fn=norm_fn, indice_key='spconv4', conv_type='spconv'),
                 post_act_block(64, 64, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm4'),
                 post_act_block(64, 64, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm4'),
+                # [200, 150, 5] -> [200, 150, 2]
+                spconv.SparseConv3d(64, 128, (3, 1, 1), stride=(2, 1, 1), padding=0, bias=False, indice_key='spconv_down2'),
+                norm_fn(128),
+                nn.ReLU(),
             )
             self.heads.append(head)
 
@@ -85,7 +93,7 @@ class Radial_MAE(nn.Module):
     def __init__(self, model_cfg, input_channels, grid_size, voxel_size, point_cloud_range, **kwargs):
         super(Radial_MAE, self).__init__()
         self.model_cfg = model_cfg
-        self.grid_size = grid_size
+        self.sparse_shape = grid_size[::-1] + [1, 0, 0]
         self.voxel_size = voxel_size
         self.point_cloud_range = point_cloud_range
         self.masked_ratio = model_cfg.get('MASKED_RATIO', 0.15)
@@ -105,18 +113,88 @@ class Radial_MAE(nn.Module):
             nn.Conv3d(16, 1, kernel_size=1),
         )
         self.criterion = nn.BCEWithLogitsLoss()
+        self.forward_re_dict = {}
+    
+    def get_loss(self, tb_dict=None):
+        tb_dict = {} if tb_dict is None else tb_dict
+        pred = self.forward_re_dict['pred']
+        target = self.forward_re_dict['target']
+        loss = self.criterion(pred, target)
+
+        tb_dict = {
+            'loss_rpn': loss.item()
+        }
+
+        return loss, tb_dict
+
 
     def forward(self, batch_dict):
         voxel_features, voxel_coords = batch_dict['voxel_features'], batch_dict['voxel_coords']
+
+        select_ratio = 1 - self.masked_ratio # ratio for select voxel
+        
+        # Calculate angles in radians for each voxel
+        angles = torch.atan2(voxel_coords[:, 3], voxel_coords[:, 2])  # atan2(y, x)
+        angles_deg = torch.rad2deg(angles) % 360  # Convert to degrees and ensure in range [0, 360)
+
+        # Group indices based on angles (adjustable angular range)
+        angular_range = self.angular_range  # degrees, can be adjusted
+        radial_groups = {}
+        for angle in range(0, 360, angular_range):
+            mask = (angles_deg >= angle) & (angles_deg < angle + angular_range)
+            group_indices = torch.where(mask)[0]
+            if len(group_indices) > 0:  # Only consider non-empty groups
+                radial_groups[angle] = group_indices
+        
+        # Ensure there are enough groups to select from
+        if len(radial_groups) == 0:
+            raise ValueError("No non-empty radial groups found. Consider adjusting the selection criteria.")
+        
+        # Randomly select a portion of radial groups
+        select_ratio = 1 - self.masked_ratio  # Assuming masked_ratio is defined
+        num_groups_to_select = min(int(select_ratio * len(radial_groups)), len(radial_groups))
+        selected_group_angles = random.sample(list(radial_groups.keys()), num_groups_to_select)
+
+        # Combine indices from the selected groups
+        selected_indices = []
+        for angle in selected_group_angles:
+            selected_indices.extend(radial_groups[angle].tolist())
+        
+        # Convert list to 1-dimensional tensor
+        selected_indices_tensor = torch.tensor(selected_indices, dtype=torch.long, device=voxel_coords.device)
+
+
+        # nums is set to voxel_features.shape[0], which is the number of voxels (the size of the first dimension of voxel_features)
+        nums = voxel_features.shape[0]
+        voxel_fratures_all_one = torch.ones(nums,1).to(voxel_features.device)
+        # Use the selected indices to segment voxel_features and voxel_coords
+        voxel_features_partial = voxel_features[selected_indices_tensor, :] # shape [N, C]
+        voxel_coords_partial = voxel_coords[selected_indices_tensor, :] # shape [N, 4]
+
         batch_size = batch_dict['batch_size']
 
         # Prepare input sparse tensor
-        input_sp_tensor = SparseConvTensor(voxel_features, voxel_coords.int(), self.grid_size, batch_size)
+        input_sp_tensor = SparseConvTensor(
+            features=voxel_features_partial,
+            indices=voxel_coords_partial.int(),
+            spatial_shape=self.sparse_shape,
+            batch_size=batch_size
+        )
+
+        input_sp_tensor_ones = SparseConvTensor(
+            features=voxel_fratures_all_one,
+            indices=voxel_coords.int(),
+            spatial_shape=self.sparse_shape,
+            batch_size=batch_size
+        )
         encoded_features = self.encoder(input_sp_tensor)
 
         # Decoder processing
+        self.forward_re_dict['target'] = input_sp_tensor_ones.dense()
         decoded_features = self.decoder(encoded_features.dense())
+        self.forward_re_dict['pred'] = decoded_features
 
+        '''
         # Assuming the target is provided in the batch_dict for training
         if 'targets' in batch_dict:
             targets = batch_dict['targets']
@@ -124,6 +202,8 @@ class Radial_MAE(nn.Module):
             targets = targets.view_as(decoded_features)
             loss = self.criterion(decoded_features, targets)
             batch_dict['loss'] = loss
+        '''
+        
 
         # For inference or validation, you might want to include additional processing
         # to convert decoded_features into a more interpretable format or calculate metrics

@@ -55,9 +55,8 @@ Performance comparison on the kitti val split evaluated by the ap with 40 recall
 
 |                                             | Car@R40 | Pedestrian@R40 | Cyclist@R40  | download | 
 |---------------------------------------------|:-------:|:--------------:|:------------:|:--------:|
-| [PointPillar](tools/cfgs/kitti_models/pointpillar.yaml) | 75.60 | 41.98 | 60.27 | [ckpt]() | 
 | [SECOND](tools/cfgs/kitti_models/second.yaml)       | 79.08 | 44.52 | 64.49 | [ckpt 71]() |
-| [SECOND + Radial-MAE (0.8)]()       | - | - | - | [ckpt]() |
+| [SECOND + Radial-MAE (0.8)]()       | 79.64 | 47.33 | 65.65 | [ckpt 75]() |
 | [SECOND + Radial-MAE (0.9)]()       | 79.01 | 46.93 | 67.75 | [ckpt 73]() |
 | [SECOND + Occupancy-MAE]()       | 79.12 | 45.35 | 63.27 | [ckpt 80]() |
 | [SECOND + ALSO]()       | 78.98 | 45.33 | 66.53 | [ckpt 71]() |
@@ -68,9 +67,8 @@ Performance comparison on the kitti val split evaluated by the ap with 40 recall
 
 |                                             | Car@R11 | Pedestrian@R11 | Cyclist@R11  | download | 
 |---------------------------------------------|:-------:|:--------------:|:------------:|:--------:|
-| [PointPillar](tools/cfgs/kitti_models/pointpillar.yaml) | - | - | - | [ckpt]() | 
 | [SECOND](tools/cfgs/kitti_models/second.yaml)       | 77.81 | 46.33 | 63.65 | [ckpt]() |
-| [SECOND + Radial-MAE (0.8)]()       | - | - | -  | [ckpt]() |
+| [SECOND + Radial-MAE (0.8)]()       | 78.23 | 48.70 | 65.72 | [ckpt 75]() |
 | [SECOND + Radial-MAE (0.9)]()       | 77.64 | 48.52 | 67.94 | [ckpt 73]() |
 | [SECOND + Occupancy-MAE]()       | 77.75 | 47.63 | 63.82 | [ckpt]() |
 | [SECOND + ALSO]()       | 77.75 | 46.18 | 66.60 | [ckpt 71]() |

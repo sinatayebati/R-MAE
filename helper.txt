@@ -29,3 +29,4 @@ bash scripts/dist_test.sh 2 --cfg_file  cfgs/nuscenes_models/bevfusion.yaml \
 
 --num_epochs_to_eval 1
 
+75 76 79
