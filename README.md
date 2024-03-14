@@ -93,6 +93,10 @@ All models are trained with **a single frame** of **20% data (~32k frames)** of 
 | [Part-A2-Anchor](tools/cfgs/waymo_models/PartA2.yaml) | 74.66/74.12	|65.82/65.32	|71.71/62.24	|62.46/54.06	|66.53/65.18	|64.05/62.75 |
 | [PV-RCNN (AnchorHead)](tools/cfgs/waymo_models/pv_rcnn.yaml) | 75.41/74.74	|67.44/66.80	|71.98/61.24	|63.70/53.95	|65.88/64.25	|63.39/61.82 | 
 | [PV-RCNN (AnchorHead) + Radial-MAE (0.9)]() | 75.70/75.05 |	67.16/66.56|	73.40/63.54| 64.47/55.63 | 67.91/66.45	|	65.40/63.99|
+| [PV-RCNN + Occupancy-MAE]() | 75.94/75.28 |	67.94/67.34| 74.02/63.48 | 64.94/55.57 | 67.21/66.49 |	65.62/63.02|
+| [PVRCNN + MV-JAR]() | -/- |	61.88/61.45| -/- | 66.98/59.02 | -/- |	57.98/57.00|
+| [PVRCNN + MAELi]() | -/- |	-/67.34 | -/- | -/56.32 | -/- |	-/62.76 |
+| [PVRCNN + PropCont]() | -/- |	-/65.47 | -/- | -/49.51 | -/- |	-/62.86 |
 | [PV-RCNN (CenterHead)](tools/cfgs/waymo_models/pv_rcnn_with_centerhead_rpn.yaml) | 75.95/75.43	|68.02/67.54	|75.94/69.40	|67.66/61.62	|70.18/68.98	|67.73/66.57|
 
 
@@ -110,7 +114,8 @@ All models are trained with 2 RTX 6000 ADA GPUs and are available for download.
 | [CenterPoint (voxel_size=0.075)](tools/cfgs/nuscenes_models/cbgs_voxel0075_res3d_centerpoint.yaml) | LiDAR    | 28.80 | 25.43  | 37.27  | 21.55 | 18.24 | 59.22 | 66.48  |  [model-34M](https://drive.google.com/file/d/1XOHAWm1MPkCKr1gqmc3TWi5AYZgPsgxU/view?usp=sharing)   |
 | [VoxelNeXt (voxel_size=0.075)](tools/cfgs/nuscenes_models/cbgs_voxel0075_voxelnext.yaml)           | LiDAR    | 30.11 | 25.23  | 40.57  | 21.69 | 18.56 | 60.53 | 66.65  | [model-31M](https://drive.google.com/file/d/1IV7e7G9X-61KXSjMGtQo579pzDNbhwvf/view?usp=share_link) |
 | [TransFusion-L + Radial-MAE](tools/cfgs/nuscenes_models/transfusion_lidar.yaml)                    | LiDAR    | 29.88 | 25.49  | 29.02  | 29.10 | 19.04 | 62.80 | 68.15  | [model-32M]() |
-| [BEVFusion + Radial-MAE](tools/cfgs/nuscenes_models/bevfusion.yaml)                                | LiDAR + Camera    | -     | -      | -      | -     | -     | -     | -      | [model-157M]() |
+| [BEVFusion](tools/cfgs/nuscenes_models/bevfusion.yaml)                                | LiDAR + Camera    |  28.26  |  25.43  |  28.88  |  26.80  | 18.59  |  65.91  |  70.20  | [model-157M]() |
+| [BEVFusion + Radial-MAE](tools/cfgs/nuscenes_models/bevfusion.yaml)                                | LiDAR + Camera    |  28.31  |  25.54  |  29.57  |  25.87  | 18.60  |  66.40  |  70.41  | [model-157M]() |
 
 
 
