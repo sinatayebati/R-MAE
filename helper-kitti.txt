@@ -1,17 +1,14 @@
+
+KITTI
+----------------------
+
 # Pretrain with multiple GPUs:
-bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/kitti_models/radial_mae_multihead_kitti.yaml
+bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/kitti_models/radial_mae_kitti.yaml
 
-
----------------------
 
 # Finetune with multiple GPUs:
 
-bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/pv_rcnn.yaml --pretrained_model ../output/kitti_models/radial_mae_pretrain_kitti_0.8/default/ckpt/checkpoint_epoch_30.pth
-
-
-bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/second.yaml --pretrained_model ../output/kitti_models/radial_mae_pretrain_kitti_0.8_final/default/ckpt/checkpoint_epoch_30.pth
-
-
+bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/second.yaml --pretrained_model ../output/kitti_models/radial_mae_kitti_0.8_10d/default/ckpt/checkpoint_epoch_6.pth
 
 
 # Eval
@@ -27,8 +24,8 @@ bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/waymo_models/radial_mae_waym
 
 
 # Train with multiple GPUs:
-bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/pv_rcnn_with_centerhead_rpn.yaml --pretrained_model ../output/waymo_models/radial_mae_waymo_0.9/default/ckpt/checkpoint_epoch_30.pth
+bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/centerpoint.yaml --pretrained_model ../output/waymo_models/radial_mae_waymo_0.9_final/default/ckpt/checkpoint_epoch_30.pth
 
 
 # Eval
-bash scripts/dist_test.sh 2 --cfg_file  cfgs/kitti_models/pv_rcnn.yaml --ckpt ../output/kitti_models/pv_rcnn/default/ckpt/checkpoint_epoch_70.pth
+bash scripts/dist_test.sh 2 --cfg_file  cfgs/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel.yaml --ckpt ../output/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel/default/ckpt/checkpoint_epoch_35.pth

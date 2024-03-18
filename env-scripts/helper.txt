@@ -5,3 +5,4 @@
 # pip install numba
 # pip install scikit-image
 # pip install SharedArray
+# pip install torch-scatter -f https://data.pyg.org/whl/torch-1.10.2+cu113.html

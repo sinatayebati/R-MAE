@@ -13,11 +13,11 @@ MODEL:
     BACKBONE_3D:
         NAME: Radial_MAE # calls pretraining backbone
         MASKED_RATIO: 0.8  # masked_ratio for Voxel_MAE
-        ANGULAR_RANGE: 1   # angular range for radial segmentation
+        ANGULAR_RANGE: 15   # angular range for radial segmentation
 
 
 OPTIMIZATION:
-    BATCH_SIZE_PER_GPU: 2
+    BATCH_SIZE_PER_GPU: 4
     NUM_EPOCHS: 30
 
     OPTIMIZER: adam_onecycle

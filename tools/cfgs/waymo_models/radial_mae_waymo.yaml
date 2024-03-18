@@ -12,7 +12,7 @@ MODEL:
 
     BACKBONE_3D:
         NAME: Radial_MAE # calls pretraining backbone
-        MASKED_RATIO: 0.9  # masked_ratio for Voxel_MAE
+        MASKED_RATIO: 0.8  # masked_ratio for Voxel_MAE
         ANGULAR_RANGE: 1   # angular range for radial segmentation
 
 

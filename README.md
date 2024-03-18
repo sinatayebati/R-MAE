@@ -61,9 +61,11 @@ Performance comparison on the kitti val split evaluated by the ap with 40 recall
 | [SECOND + Occupancy-MAE]()       | 79.12 | 45.35 | 63.27 | [ckpt 80]() |
 | [SECOND + ALSO]()       | 78.98 | 45.33 | 66.53 | [ckpt 71]() |
 | [PV-RCNN](tools/cfgs/kitti_models/pv_rcnn.yaml) | 82.28 | 51.51 | 69.45 | [ckpt 70]() |
-| [Radial-MAE (0.8) + PV-RCNN]() | 83.00 | 52.08 | 71.16 | [ckpt 78]() |
-| [Radial-MAE (0.9) + PV-RCNN]() | 82.82 | 51.61 | 73.82 | [ckpt 78]() |
+| [PV-RCNN + Radial-MAE (0.8) ]() | 83.00 | 52.08 | 71.16 | [ckpt 78]() |
+| [PV-RCNN + Radial-MAE (0.9)]() | 82.82 | 51.61 | 73.82 | [ckpt 78]() |
 
+
+Performance comparison on the kitti val split evaluated by the ap with 11 recall positions at moderate difficulty level.
 
 |                                             | Car@R11 | Pedestrian@R11 | Cyclist@R11  | download | 
 |---------------------------------------------|:-------:|:--------------:|:------------:|:--------:|
@@ -73,8 +75,20 @@ Performance comparison on the kitti val split evaluated by the ap with 40 recall
 | [SECOND + Occupancy-MAE]()       | 77.75 | 47.63 | 63.82 | [ckpt]() |
 | [SECOND + ALSO]()       | 77.75 | 46.18 | 66.60 | [ckpt 71]() |
 | [PV-RCNN](tools/cfgs/kitti_models/pv_rcnn.yaml) | 78.81 | 52.84 | 69.10 | [ckpt 70]() |
-| [Radial-MAE (0.8) + PV-RCNN]() | 79.42 | 53.24 | 71.33 | [ckpt 78]() |
-| [Radial-MAE (0.9) + PV-RCNN]() | 79.25 | 53.10 | 72.99 | [ckpt 78]() |
+| [PV-RCNN + Radial-MAE (0.8)]() | 79.42 | 53.24 | 71.33 | [ckpt 78]() |
+| [PV-RCNN + Radial-MAE (0.9)]() | 79.25 | 53.10 | 72.99 | [ckpt 78]() |
+
+
+Performance comparison on SECOND finetuned on Radial-MAE with different angular range masking on the kitti val split evaluated by the ap with 40/11 recall positions at moderate difficulty level.
+
+
+|                                             | Car @40/@R11 | Pedestrian @40/@R11 | Cyclist @40/@R11  |
+|---------------------------------------------|:-------:|:--------------:|:------------:|
+| [SECOND](tools/cfgs/kitti_models/second.yaml)       | 79.08/77.81 | 44.52/46.33 | 64.49/63.65 |
+| [SECOND + Radial-MAE (0.8) 1d]()       | 79.64/78.23 | 47.33/48.70 | 65.65/65.72 |
+| [SECOND + Radial-MAE (0.8) 5d]()       | 79.38/78.05 | 46.81/48.00 | 63.62/64.48 |
+
+
 
 
 
@@ -91,14 +105,16 @@ All models are trained with **a single frame** of **20% data (~32k frames)** of 
 [CenterPoint](tools/cfgs/waymo_models/centerpoint_without_resnet.yaml)| 71.33/70.76|63.16/62.65|	72.09/65.49	|64.27/58.23|	68.68/67.39	|66.11/64.87|
 | [CenterPoint (ResNet)](tools/cfgs/waymo_models/centerpoint.yaml)|72.76/72.23|64.91/64.42	|74.19/67.96	|66.03/60.34|	71.04/69.79	|68.49/67.28 |
 | [Part-A2-Anchor](tools/cfgs/waymo_models/PartA2.yaml) | 74.66/74.12	|65.82/65.32	|71.71/62.24	|62.46/54.06	|66.53/65.18	|64.05/62.75 |
+| [Voxel R-CNN (CenterHead)-Dynamic-Voxel](tools/cfgs/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel.yaml) | 76.13/75.66	|68.18/67.74	|78.20/71.98	|69.29/63.59	| 70.75/69.68	|68.25/67.21|
+| [Voxel R-CNN (CenterHead)-Dynamic-Voxel + Radial-MAE (0.9)]() | 76.35/75.88	| 67.99/67.56 | 78.60/72.56	| 69.93/64.35	| 71.74/70.65	| 69.13/68.08 |
 | [PV-RCNN (AnchorHead)](tools/cfgs/waymo_models/pv_rcnn.yaml) | 75.41/74.74	|67.44/66.80	|71.98/61.24	|63.70/53.95	|65.88/64.25	|63.39/61.82 | 
 | [PV-RCNN (AnchorHead) + Radial-MAE (0.9)]() | 75.70/75.05 |	67.16/66.56|	73.40/63.54| 64.47/55.63 | 67.91/66.45	|	65.40/63.99|
+| [PV-RCNN (CenterHead)](tools/cfgs/waymo_models/pv_rcnn_with_centerhead_rpn.yaml) | 75.95/75.43	|68.02/67.54	|75.94/69.40	|67.66/61.62	|70.18/68.98	|67.73/66.57|
+| [PV-RCNN (CenterHead) + Radial-MAE (0.9)]() | 76.72/76.22 |	68.38/67.92|	78.19/71.74 | 69.63/63.68 | 72.44/70.32	|	68.84/67.76|
 | [PV-RCNN + Occupancy-MAE]() | 75.94/75.28 |	67.94/67.34| 74.02/63.48 | 64.94/55.57 | 67.21/66.49 |	65.62/63.02|
 | [PVRCNN + MV-JAR]() | -/- |	61.88/61.45| -/- | 66.98/59.02 | -/- |	57.98/57.00|
 | [PVRCNN + MAELi]() | -/- |	-/67.34 | -/- | -/56.32 | -/- |	-/62.76 |
 | [PVRCNN + PropCont]() | -/- |	-/65.47 | -/- | -/49.51 | -/- |	-/62.86 |
-| [PV-RCNN (CenterHead)](tools/cfgs/waymo_models/pv_rcnn_with_centerhead_rpn.yaml) | 75.95/75.43	|68.02/67.54	|75.94/69.40	|67.66/61.62	|70.18/68.98	|67.73/66.57|
-
 
 
 ### nuScenes Dataset 
