@@ -3,7 +3,7 @@ KITTI
 ----------------------
 
 # Pretrain with multiple GPUs:
-bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/kitti_models/radial_mae_kitti.yaml
+bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/kitti_models/radial_mae_multihead_kitti.yaml
 
 
 # Finetune with multiple GPUs:
@@ -23,8 +23,9 @@ Waymo
 bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml
 
 
-# Train with multiple GPUs:
-bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/centerpoint.yaml --pretrained_model ../output/waymo_models/radial_mae_waymo_0.9_final/default/ckpt/checkpoint_epoch_30.pth
+# Finetune with multiple GPUs:
+bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/pv_rcnn_with_centerhead_rpn.yaml --pretrained_model ../output/waymo_models/radial_mae_waymo_0.9_final/default/ckpt/checkpoint_epoch_30.pth
+
 
 
 # Eval

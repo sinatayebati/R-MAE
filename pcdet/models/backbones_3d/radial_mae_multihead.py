@@ -42,25 +42,23 @@ class SparseBasicBlock(spconv.SparseModule):
 
 
 class MultiHeadEncoder(nn.Module):
-    def __init__(self, input_channels, grid_size, voxel_size, point_cloud_range, num_heads=2):
+    def __init__(self, input_channels, num_heads=2, reduced_channels=64, model_cfg=None):
         super(MultiHeadEncoder, self).__init__()
         self.num_heads = num_heads
-        self.heads = nn.ModuleList()
         norm_fn = partial(nn.BatchNorm1d, eps=1e-3, momentum=0.01)
 
-        # Retrieve last_pad from model_cfg, default to 0 if not specified
-        #last_pad = model_cfg.get('last_pad', 0)
+        # Shared initial layer(s)
+        self.shared_initial_layer = spconv.SparseSequential(
+            spconv.SubMConv3d(input_channels, 16, 3, padding=1, bias=False, indice_key='subm1'),
+            norm_fn(16),
+            nn.ReLU(),
+        )
 
+        # Distinct paths for each head using original encoder layers
+        self.heads = nn.ModuleList()
         for _ in range(num_heads):
-            head = spconv.SparseSequential(
-                spconv.SubMConv3d(input_channels, 16, 3, padding=1, bias=False, indice_key='subm1'),
-                norm_fn(16),
-                nn.ReLU(),
-                post_act_block(16, 16, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm1'),
-                # [1600, 1408, 41] <- [800, 704, 21]
-                post_act_block(16, 32, 3, stride=2, padding=1, norm_fn=norm_fn, indice_key='spconv2', conv_type='spconv'),
-                post_act_block(32, 32, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm2'),
-                post_act_block(32, 32, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm2'),
+            head_layers = spconv.SparseSequential(
+                post_act_block(16, reduced_channels // num_heads, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm1'),
                 # [800, 704, 21] <- [400, 352, 11]
                 post_act_block(32, 64, 3, stride=2, padding=1, norm_fn=norm_fn, indice_key='spconv3', conv_type='spconv'),
                 post_act_block(64, 64, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm3'),
@@ -69,26 +67,45 @@ class MultiHeadEncoder(nn.Module):
                 post_act_block(64, 64, 3, stride=2, padding=(0, 1, 1), norm_fn=norm_fn, indice_key='spconv4', conv_type='spconv'),
                 post_act_block(64, 64, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm4'),
                 post_act_block(64, 64, 3, stride=1, padding=1, norm_fn=norm_fn, indice_key='subm4'),
-                # [200, 150, 5] -> [200, 150, 2]
-                spconv.SparseConv3d(64, 128, (3, 1, 1), stride=(2, 1, 1), padding=0, bias=False, indice_key='spconv_down2'),
-                norm_fn(128),
-                nn.ReLU(),
             )
-            self.heads.append(head)
+            # Optional final layer based on model configuration
+            if model_cfg and model_cfg.get('RETURN_ENCODED_TENSOR', True):
+                last_pad = model_cfg.get('last_pad', 0)
+                head_layers.add_module('conv_out', spconv.SparseSequential(
+                    spconv.SparseConv3d(64, 128, (3, 1, 1), stride=(2, 1, 1), padding=last_pad, bias=False, indice_key='spconv_down2'),
+                    norm_fn(128),
+                    nn.ReLU(),
+                ))
+            self.heads.append(head_layers)
+        
+        # Feature reduction layer to reduce dimensionality post-aggregation
+        self.feature_reduction = spconv.SubMConv3d(num_heads * 128, reduced_channels, kernel_size=1, bias=False, indice_key='reduction')
+        self.norm = norm_fn(reduced_channels)
+        self.relu = nn.ReLU()
 
     def forward(self, x):
-        aggregated_features = []
-        for head in self.heads:
-            head_output = head(x)
-            aggregated_features.append(head_output.features)
+        x = self.shared_initial_layer(x)
+
+        # Process through each head and collect features
+        head_features = [head(x).features for head in self.heads]
 
         # Aggregate features from all heads
-        aggregated_features = torch.stack(aggregated_features, dim=0).mean(dim=0)
-
-        # Replace features in the input sparse tensor with the aggregated features
-        x = x.replace_feature(aggregated_features)
-
+        aggregated_features = torch.cat(head_features, dim=1)
+        
+        # Reduce feature dimensionality
+        reduced_features = self.feature_reduction(spconv.SparseConvTensor(aggregated_features, x.indices, x.spatial_shape, x.batch_size))
+        reduced_features = self.norm(reduced_features.features)
+        reduced_features = self.relu(reduced_features)
+        
+        # Replace features in the input sparse tensor with the reduced features
+        x = SparseConvTensor(
+            features=reduced_features,
+            indices=x.indices,
+            spatial_shape=x.spatial_shape,
+            batch_size=x.batch_size
+        )
         return x
+
 
 
 
@@ -103,13 +120,13 @@ class Radial_MAE_multihead(nn.Module):
         self.angular_range = model_cfg.get('ANGULAR_RANGE', 5)
 
         #norm_fn = partial(nn.BatchNorm1d, eps=1e-3, momentum=0.01)
-        self.encoder = MultiHeadEncoder(input_channels, grid_size, voxel_size, point_cloud_range, num_heads=2)
-        self.num_point_features = 8
+        self.encoder = MultiHeadEncoder(input_channels, num_heads=2, model_cfg=model_cfg)
+        self.num_point_features = 16
 
 
         # Initialize the decoder
         self.decoder = nn.Sequential(
-            nn.ConvTranspose3d(128, 64, kernel_size=2, stride=2),
+            nn.ConvTranspose3d(128 * 2, 64, kernel_size=2, stride=2),
             nn.ReLU(),
             nn.ConvTranspose3d(64, 32, kernel_size=2, stride=2),
             nn.ReLU(),
@@ -134,6 +151,17 @@ class Radial_MAE_multihead(nn.Module):
 
 
     def forward(self, batch_dict):
+        """
+        Args:
+            batch_dict:
+                batch_size: int
+                vfe_features: (num_voxels, C)
+                voxel_coords: (num_voxels, 4), [batch_idx, z_idx, y_idx, x_idx]
+        Returns:
+            batch_dict:
+                encoded_spconv_tensor: sparse tensor
+                point_features: (N, C)
+        """
         voxel_features, voxel_coords = batch_dict['voxel_features'], batch_dict['voxel_coords']
 
         select_ratio = 1 - self.masked_ratio # ratio for select voxel
@@ -198,20 +226,6 @@ class Radial_MAE_multihead(nn.Module):
         self.forward_re_dict['target'] = input_sp_tensor_ones.dense()
         decoded_features = self.decoder(encoded_features.dense())
         self.forward_re_dict['pred'] = decoded_features
-
-        '''
-        # Assuming the target is provided in the batch_dict for training
-        if 'targets' in batch_dict:
-            targets = batch_dict['targets']
-            # Ensure targets are in the correct shape and device
-            targets = targets.view_as(decoded_features)
-            loss = self.criterion(decoded_features, targets)
-            batch_dict['loss'] = loss
-        '''
-        
-
-        # For inference or validation, you might want to include additional processing
-        # to convert decoded_features into a more interpretable format or calculate metrics
-
+    
         return batch_dict
 

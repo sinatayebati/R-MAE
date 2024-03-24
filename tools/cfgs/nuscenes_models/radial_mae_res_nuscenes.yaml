@@ -17,7 +17,7 @@ MODEL:
         ANGULAR_RANGE: 1   # angular range for radial segmentation
 
 OPTIMIZATION:
-    BATCH_SIZE_PER_GPU: 2
+    BATCH_SIZE_PER_GPU: 6
     NUM_EPOCHS: 30
 
     OPTIMIZER: adam_onecycle

@@ -1,17 +1,17 @@
+nuscenes_models
+------------------------
+
 # Pretrain with multiple GPUs:
 bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/nuscenes_models/radial_mae_res_nuscenes.yaml
 
-# Pretrain with a single GPU:
-python3 train_ssl.py  --cfg_file cfgs/waymo_models/radial_mae_waymo.yaml --batch_size 4
 
+# Finetune with multiple GPUs:
+bash ./scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/pv_rcnn.yaml --pretrained_model ../output/kitti_models/radial_mae_pretrain_kitti_0.9/default/ckpt/checkpoint_epoch_30.pth
+
+
+
+MULTIMODAL
 ---------------------
-
-# Train with multiple GPUs:
-bash ./scripts/dist_train.sh 2 --cfg_file cfgs/kitti_models/pv_rcnn.yaml --pretrained_model ../output/kitti_models/radial_mae_pretrain_kitti_0.9/default/ckpt/checkpoint_epoch_30.pth
-
-
-
-
 
 # Train bevfusion
 bash scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/transfusion_lidar.yaml \
@@ -28,5 +28,3 @@ bash scripts/dist_test.sh 2 --cfg_file  cfgs/nuscenes_models/bevfusion.yaml \
 
 
 --num_epochs_to_eval 1
-
-75 76 79
