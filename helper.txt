@@ -6,7 +6,8 @@ bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/nuscenes_models/radial_mae_r
 
 
 # Finetune with multiple GPUs:
-bash ./scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/pv_rcnn.yaml --pretrained_model ../output/kitti_models/radial_mae_pretrain_kitti_0.9/default/ckpt/checkpoint_epoch_30.pth
+bash ./scripts/dist_train.sh 2 --cfg_file cfgs/nuscenes_models/cbgs_voxel0075_res3d_centerpoint.yaml --pretrained_model ../output/nuscenes_models/radial_mae_res_nuscenes/default/ckpt/checkpoint_epoch_30.pth
+
 
 
 

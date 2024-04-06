@@ -35,7 +35,7 @@ def plot_tensorboard_scalars(log_dirs, labels, tags, save_path=None):
         plt.show()
 
 if __name__ == "__main__":
-    log_dir1 = '/hdd_10tb/sina/Radial_MAE/output/kitti_models/radial_mae_pretrain_kitti_0.5ra/default/tensorboard/events.out.tfevents.1706236039.aeonlab2024'
+    log_dir1 = '/hdd_10tb/sina/Radial_MAE/output/nuscenes_models/radial_mae_res_nuscenes/default/tensorboard/events.out.tfevents.1711039832.aeonlab2024'
     #log_dir2 = 'path/to/log_dir2'
     #log_dir3 = 'path/to/log_dir3'
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     labels = ['Run 1']
     tags = ['train/loss', 'train/loss_rpn']  # Add your tags here
 
-    save_path = '/hdd_10tb/sina/Radial_MAE/output/kitti_models/radial_mae_pretrain_kitti_0.5ra/default'
+    save_path = '/hdd_10tb/sina/Radial_MAE/output/nuscenes_models/radial_mae_res_nuscenes/default2'
 
     #plot_tensorboard_scalars([log_dir1, log_dir2, log_dir3], labels, tags, save_path)
     plot_tensorboard_scalars([log_dir1], labels, tags, save_path)
