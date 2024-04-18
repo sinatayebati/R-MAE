@@ -137,8 +137,8 @@ All models are trained with 2 RTX 6000 ADA GPUs and are available for download.
 | [SECOND-MultiHead (CBGS)](tools/cfgs/nuscenes_models/cbgs_second_multihead.yaml)                   | LiDAR    | 31.15 | 25.51  | 26.64  | 26.26 | 20.46 | 50.59 | 62.29  |  [model-35M](https://drive.google.com/file/d/1bNzcOnE3u9iooBFMk2xK7HqhdeQ_nwTq/view?usp=sharing)   |
 | [CenterPoint](tools/cfgs/nuscenes_models/cbgs_voxel01_res3d_centerpoint.yaml)     | LiDAR    | 30.11 | 25.55  | 38.28  | 21.94 | 18.87 | 56.03 | 64.54  |  [model-34M](https://drive.google.com/file/d/1Cz-J1c3dw7JAWc25KRG1XQj8yCaOlexQ/view?usp=sharing)   |
 | [CenterPoint + Radial-MAE]() | LiDAR    | 29.73 | 25.71  | 34.16  | 20.02 | 17.91 | 59.20 | 66.85  |  [model-34M]()   |
-| [TransFusion-L](tools/cfgs/nuscenes_models/transfusion_lidar.yaml) | LiDAR    | - | - | - | - | - | - | -  | [model-32M]() |
-| [TransFusion-L + Radial-MAE]() | LiDAR    | 29.88 | 25.49  | 29.02  | 29.10 | 19.04 | 62.80 | 68.15  | [model-32M]() |
+| [TransFusion-L](tools/cfgs/nuscenes_models/transfusion_lidar.yaml) | LiDAR    | 27.96 | 25.37 | 29.35 | 27.31 | 18.55 | 64.58 | 69.43  | [model-32M]() |
+| [TransFusion-L + Radial-MAE]() | LiDAR    | 28.19 | 25.20  | 26.92  | 24.27 | 18.71 | 65.01 | 70.17  | [model-32M]() |
 | [BEVFusion](tools/cfgs/nuscenes_models/bevfusion.yaml)     | LiDAR + Camera    |  28.26  |  25.43  |  28.88  |  26.80  | 18.67  |  65.91  |  70.20  | [model-157M]() |
 | [BEVFusion + Radial-MAE](tools/cfgs/nuscenes_models/bevfusion.yaml)                                | LiDAR + Camera    |  28.31  |  25.54  |  29.57  |  25.87  | 18.60  |  66.40  |  70.41  | [model-157M]() |
 

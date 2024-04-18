@@ -12,7 +12,8 @@ bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/second.yaml --p
 
 
 # Eval
-bash scripts/dist_test.sh 2 --cfg_file  cfgs/kitti_models/pv_rcnn.yaml --ckpt ../output/kitti_models/pv_rcnn/default/ckpt/checkpoint_epoch_70.pth
+bash scripts/dist_test.sh 2 --cfg_file  cfgs/kitti_models/pv_rcnn.yaml --ckpt ../output/kitti_models/pv_rcnn_09_final/default/ckpt/checkpoint_epoch_78.pth
+
 
 
 
