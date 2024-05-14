@@ -79,7 +79,7 @@ Performance comparison on the kitti val split evaluated by the ap with 11 recall
 | [PV-RCNN + Radial-MAE (0.9)]() | 79.25 | 53.10 | 72.99 | [ckpt 78]() |
 
 
-"Performance Comparison of Radial-MAE Variations with 80% Masking and Angular Ranges of 1°, 5°, and 10° Fine-Tuned on SECOND, Evaluated on KITTI Validation Split by AP with 40/11 Recall Positions at Moderate Difficulty Level"
+Performance Comparison of Radial-MAE Variations with 80% Masking and Angular Ranges of 1°, 5°, and 10° Fine-Tuned on SECOND, Evaluated on KITTI Validation Split by AP with 40/11 Recall Positions at Moderate Difficulty Level"
 
 
 |                                             | Car @40/@R11 | Pedestrian @40/@R11 | Cyclist @40/@R11  |
@@ -89,6 +89,15 @@ Performance comparison on the kitti val split evaluated by the ap with 11 recall
 | [SECOND + Radial-MAE (0.8) 5d]()       | 79.38/78.05 | 46.81/48.00 | 63.62/64.48 |
 | [SECOND + Radial-MAE (0.8) 10d]()       | 79.41/78.04 | 46.23/47.57 | 65.18/65.21s |
 
+
+Results of domain adaption on KITTI validation split by AP with 40 recall positions at moderate difficulty level. Pretraining was performed on %90 masking.
+
+|                                             | Car @40 | Pedestrian @40 | Cyclist @40  |
+|---------------------------------------------|:-------:|:--------------:|:------------:|
+| [SECOND](tools/cfgs/kitti_models/second.yaml)       | 79.08 | 44.52 | 64.49 |
+| [SECOND + waymo -> kitti](75)       | 79.30 | 48.61 | 66.62 |
+| [PVRCNN](tools/cfgs/kitti_models/pvrcnn.yaml)       | 82.28 | 51.51 | 69.45 |
+| [PVRCNN + waymo -> kitti](75)       | 83.21 | 52.14 | 74.16 |
 
 
 
