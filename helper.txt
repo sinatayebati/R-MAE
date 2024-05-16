@@ -40,7 +40,7 @@ bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/kitti_models/radial_mae_mult
 
 # Finetune with multiple GPUs:
 
-bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/second.yaml --pretrained_model ../output/waymo_models/radial_mae_waymo_0.9_final/default/ckpt/checkpoint_epoch_30.pth
+bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/pv_rcnn.yaml --pretrained_model ../output/kitti_models/also_pretrained/pretrained_backbone_also_kitti3d_second_epoch_499.ckpt
 
 
 # Eval

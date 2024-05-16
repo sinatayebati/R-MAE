@@ -95,10 +95,8 @@ Results of domain adaption on KITTI validation split by AP with 40 recall positi
 |                                             | Car @40 | Pedestrian @40 | Cyclist @40  |
 |---------------------------------------------|:-------:|:--------------:|:------------:|
 | [SECOND](tools/cfgs/kitti_models/second.yaml)       | 79.08 | 44.52 | 64.49 |
-| [SECOND + waymo -> kitti](75)       | 79.30 | 48.61 | 66.62 |
-| [PVRCNN](tools/cfgs/kitti_models/pvrcnn.yaml)       | 82.28 | 51.51 | 69.45 |
-| [PVRCNN + waymo -> kitti](75)       | 83.21 | 52.14 | 74.16 |
-
+| [+ waymo -> kitti](75)       | 79.30 | 48.61 | 66.62 |
+| [+ nuscene -> kitti](75)       | 79.32 | 46.05 | 68.27 |
 
 
 
