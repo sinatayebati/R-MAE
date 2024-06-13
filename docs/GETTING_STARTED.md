@@ -69,6 +69,7 @@ python -m pcdet.datasets.nuscenes.nuscenes_dataset --func create_nuscenes_infos 
 * Please download the official [Waymo Open Dataset](https://waymo.com/open/download/), 
 including the training data `training_0000.tar~training_0031.tar` and the validation 
 data `validation_0000.tar~validation_0007.tar`.
+* Note: make sure to download the Waymo `v1.2` otherwise you would face problems in evaluations.
 * Unzip all the above `xxxx.tar` files to the directory of `data/waymo/raw_data` as follows (You could get 798 *train* tfrecord and 202 *val* tfrecord ):  
 ```
 OpenPCDet

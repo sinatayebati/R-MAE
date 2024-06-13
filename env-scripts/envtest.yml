@@ -1,4 +1,4 @@
-name: rd-mae
+name: r-mae
 channels:
   - pytorch3d
   - plotly

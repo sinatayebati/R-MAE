@@ -1,14 +1,83 @@
-## Installation
+<div align='center'>
+ 
+# Sense Less, Generate More: Pre-training LiDAR Perception with Masked Autoencoders for Ultra-Efficient 3D Sensing
 
-Please refer to [INSTALL.md](docs/INSTALL.md) for the installation of [OpenPCDet(v0.6)](https://github.com/open-mmlab/OpenPCDet).
+[Sina Tayebati](https://github.com/sinatayebati)<sup></sup>&nbsp;&nbsp;&nbsp;
+[Theja Tulabandhula](https://theja.org/)<sup></sup>&nbsp;&nbsp;&nbsp;
+[Amit R. Trivedi](https://scholar.google.com/citations?user=Thpd0HkAAAAJ&hl=en&oi=ao)<sup></sup>&nbsp;&nbsp;&nbsp;
 
-## Getting Started
+<div>
+<sup></sup> University of Illinois Chicago
+</div>
 
-Please refer to [GETTING_STARTED.md](docs/GETTING_STARTED.md) .
+<br/>
 
-## Usage
+[![arXiv](https://img.shields.io/badge/arXiv-2312.02158-darkred)](https://arxiv.org/abs/2406.07833) 
+[![Project page](https://img.shields.io/badge/Project%20Page-PaSCo-darkgreen)]()
 
-### Pre-training Radial MAE
+</div>
+
+If you find this work or code useful, please cite our [paper](https://arxiv.org/abs/2406.07833) and [give this repo a star](https://github.com/sinatayebati/Radial_MAE):
+
+```
+@article{tayebati2024sense,
+    title={Sense Less, Generate More: Pre-training LiDAR Perception with Masked Autoencoders for Ultra-Efficient 3D Sensing},
+    author={Sina Tayebati and Theja Tulabandhula and Amit R. Trivedi},
+    journal={arXiv preprint arXiv:2406.07833},
+    year={2024},
+}
+```
+
+<!-- <p align="center">
+    <img src="./assets/CoRL-method-2.png"
+    width = 800px
+    >
+</p> -->
+![Overview](./assets/CoRL-method-2.png)
+
+# Table of Content
+- [News](#news) 
+- [1. Installation](#1-installation)
+- [2. Data Preparation](#2-data-preparation)
+- [3. Training and Evaluation](#3-training-and-evaluation)
+- [4. Performance Benchmarks](#4-performance-benchmarks)
+
+# News
+- 04/14/2024: Code released for pre-training R-MAE.
+- 06/12/2024: Paper released on [arXiv](https://arxiv.org/abs/2406.07833)!
+
+# 1. Installation
+
+1. Download the source code with git
+      ```
+      git clone https://github.com/sinatayebati/Radial_MAE.git
+      ```
+2. Create conda environment with essential packages:
+      ```
+      bash env-scripts/setup.sh
+      conda activate r-mae
+      ```
+      ```
+      pip install requirements.txt
+      pip install spconv-cu113
+      ```
+      ```
+      python setup.py develop
+      ```
+
+
+In case of any issues, please refer to [INSTALL.md](docs/INSTALL.md) for the installation of [OpenPCDet(v0.6)](https://github.com/open-mmlab/OpenPCDet).
+
+# 2. Data Preparation
+
+Please refer to [GETTING_STARTED.md](docs/GETTING_STARTED.md) for detailed documentation.
+
+> [!CAUTION]
+> For Waymo, please make sure to download `v.1.2` otherwise you will face evaluation issues.
+
+# 3. Training and Evaluation
+
+## 3.1. Pre-training R-MAE
 
 ### KITTI:
 
@@ -37,68 +106,62 @@ bash ./scripts/dist_train_mae.sh ${NUM_GPUS} \
   --cfg_file cfgs/nuscenes_models/radial_mae_res_nuescenes.yaml
 ```
 
-### Finetuning
+## 3.2. Finetuning
 
-Train with multiple GPUs:
-* example of fintetuning Radial_MAE checkpoint on Waymo using PVRCNN
+Finetune with multiple GPUs:
+* example of fintetuning R_MAE checkpoint on Waymo using PVRCNN
 ```shell
 bash ./scripts/dist_train.sh ${NUM_GPUS} \
   --cfg_file cfgs/waymo_models/pv_rcnn.yaml \
   --pretrained_model ../output/waymo_models/radial_mae_waymo/default/ckpt/checkpoint_epoch_30.pth
 ```
 
-## Performance
+## 3.3. Evaluation
+ By default, scripts are set to evaluate the last 5 checkpoints of each training. However, in case you need to evaluate specific checkpoint, use the following sample:
 
-### KITTI Dataset
+```shell
+bash scripts/dist_test.sh ${NUM_GPUS} \
+ --cfg_file  cfgs/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel.yaml \
+ --ckpt ../output/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel/default/ckpt/checkpoint_epoch_30.pth
+```
+
+# 4. Performance Benchmarks
+
+### KITTI 3D Dataset
 
 Performance comparison on the kitti val split evaluated by the ap with 40 recall positions at moderate difficulty level.
 
 |                                             | Car@R40 | Pedestrian@R40 | Cyclist@R40  | download | 
 |---------------------------------------------|:-------:|:--------------:|:------------:|:--------:|
-| [SECOND](tools/cfgs/kitti_models/second.yaml)       | 79.08 | 44.52 | 64.49 | [ckpt 71]() |
-| [SECOND + Radial-MAE (0.8)]()       | 79.64 | 47.33 | 65.65 | [ckpt 75]() |
-| [SECOND + Radial-MAE (0.9)]()       | 79.01 | 46.93 | 67.75 | [ckpt 73]() |
-| [SECOND + Occupancy-MAE]()       | 79.12 | 45.35 | 63.27 | [ckpt 80]() |
-| [SECOND + ALSO]()       | 78.98 | 45.33 | 66.53 | [ckpt 71]() |
-| [PV-RCNN](tools/cfgs/kitti_models/pv_rcnn.yaml) | 82.28 | 51.51 | 69.45 | [ckpt 70]() |
-| [PV-RCNN + Radial-MAE (0.8) ]() | 83.00 | 52.08 | 71.16 | [ckpt 78]() |
-| [PV-RCNN + Radial-MAE (0.9)]() | 82.82 | 51.61 | 73.82 | [ckpt 78]() |
+| [SECOND](tools/cfgs/kitti_models/second.yaml)       | 79.08 | 44.52 | 64.49 |
+| [SECOND + R-MAE [0.8 mr]]()       | 79.64 | 47.33 | 65.65 | [ckpt]() |
+| [SECOND + R-MAE [0.9 mr]]()       | 79.01 | 46.93 | 67.75 | [ckpt]() |
+| [PV-RCNN](tools/cfgs/kitti_models/pv_rcnn.yaml) | 82.28 | 51.51 | 69.45 |
+| [PV-RCNN + R-MAE [0.8 mr] ]() | 83.00 | 52.08 | 71.16 | [ckpt]() |
+| [PV-RCNN + R-MAE [0.9 mr] ]() | 82.82 | 51.61 | 73.82 | [ckpt]() |
 
 
-Performance comparison on the kitti val split evaluated by the ap with 11 recall positions at moderate difficulty level.
+Performance Comparison of R-MAE Variations with 80% Masking and Angular Ranges of 1°, 5°, and 10° Fine-Tuned on SECOND, Evaluated on KITTI Validation Split by AP with 40/11 Recall Positions at Moderate Difficulty Level"
 
-|                                             | Car@R11 | Pedestrian@R11 | Cyclist@R11  | download | 
+
+|                                             | Car @40/@R11 | Pedestrian @40/@R11 | Cyclist @40/@R11  | download | 
 |---------------------------------------------|:-------:|:--------------:|:------------:|:--------:|
-| [SECOND](tools/cfgs/kitti_models/second.yaml)       | 77.81 | 46.33 | 63.65 | [ckpt]() |
-| [SECOND + Radial-MAE (0.8)]()       | 78.23 | 48.70 | 65.72 | [ckpt 75]() |
-| [SECOND + Radial-MAE (0.9)]()       | 77.64 | 48.52 | 67.94 | [ckpt 73]() |
-| [SECOND + Occupancy-MAE]()       | 77.75 | 47.63 | 63.82 | [ckpt]() |
-| [SECOND + ALSO]()       | 77.75 | 46.18 | 66.60 | [ckpt 71]() |
-| [PV-RCNN](tools/cfgs/kitti_models/pv_rcnn.yaml) | 78.81 | 52.84 | 69.10 | [ckpt 70]() |
-| [PV-RCNN + Radial-MAE (0.8)]() | 79.42 | 53.24 | 71.33 | [ckpt 78]() |
-| [PV-RCNN + Radial-MAE (0.9)]() | 79.25 | 53.10 | 72.99 | [ckpt 78]() |
-
-
-Performance Comparison of Radial-MAE Variations with 80% Masking and Angular Ranges of 1°, 5°, and 10° Fine-Tuned on SECOND, Evaluated on KITTI Validation Split by AP with 40/11 Recall Positions at Moderate Difficulty Level"
-
-
-|                                             | Car @40/@R11 | Pedestrian @40/@R11 | Cyclist @40/@R11  |
-|---------------------------------------------|:-------:|:--------------:|:------------:|
 | [SECOND](tools/cfgs/kitti_models/second.yaml)       | 79.08/77.81 | 44.52/46.33 | 64.49/63.65 |
-| [SECOND + Radial-MAE (0.8) 1d]()       | 79.64/78.23 | 47.33/48.70 | 65.65/65.72 |
-| [SECOND + Radial-MAE (0.8) 5d]()       | 79.38/78.05 | 46.81/48.00 | 63.62/64.48 |
-| [SECOND + Radial-MAE (0.8) 10d]()       | 79.41/78.04 | 46.23/47.57 | 65.18/65.21s |
+| [SECOND + R-MAE [0.8 mr + 1 degree] ]()       | 79.64/78.23 | 47.33/48.70 | 65.65/65.72 | [ckpt]() |
+| [SECOND + R-MAE [0.8 mr + 5 degree] ]()       | 79.38/78.05 | 46.81/48.00 | 63.62/64.48 | [ckpt]() |
+| [SECOND + R-MAE [0.8 mr + 10 degree]]()       | 79.41/78.04 | 46.23/47.57 | 65.18/65.21s | [ckpt]() |
 
 
 Results of domain adaption on KITTI validation split by AP with 40 recall positions at moderate difficulty level. Pretraining was performed on %90 masking.
 
-|                                             | Car @40 | Pedestrian @40 | Cyclist @40  |
-|---------------------------------------------|:-------:|:--------------:|:------------:|
+|                                             | Car @40 | Pedestrian @40 | Cyclist @40  | download | 
+|---------------------------------------------|:-------:|:--------------:|:------------:| :--------:|
 | [SECOND](tools/cfgs/kitti_models/second.yaml)       | 79.08 | 44.52 | 64.49 |
-| [+ waymo -> kitti](75)       | 79.30 | 48.61 | 66.62 |
-| [+ nuscene -> kitti](75)       | 79.32 | 46.05 | 68.27 |
+| [+ waymo -> kitti](75)       | 79.30 | 48.61 | 66.62 |  [ckpt]() |
+| [+ nuscene -> kitti](75)       | 79.32 | 46.05 | 68.27 |  [ckpt]() |
 
-
+> [!NOTE]
+> Our results for SOTA models (i.e socond, pvrcnn) are reproduced by us and you will find slight difference in our results compared to released benchmarks of OpenPCDet due to slight differences in evaluation metrics.
 
 
 ### Waymo Open Dataset
@@ -108,20 +171,13 @@ All models are trained with **a single frame** of **20% data (~32k frames)** of 
 |    Performance@(train with 20\% Data)            | Vec_L1 | Vec_L2 | Ped_L1 | Ped_L2 | Cyc_L1 | Cyc_L2 |  
 |---------------------------------------------|----------:|:-------:|:-------:|:-------:|:-------:|:-------:|
 [CenterPoint](tools/cfgs/waymo_models/centerpoint_without_resnet.yaml)| 71.33/70.76|63.16/62.65|	72.09/65.49	|64.27/58.23|	68.68/67.39	|66.11/64.87|
-| [CenterPoint (ResNet)](tools/cfgs/waymo_models/centerpoint.yaml)|72.76/72.23|64.91/64.42	|74.19/67.96	|66.03/60.34|	71.04/69.79	|68.49/67.28 |
-| [CenterPoint (ResNet) + Radial-MAE](tools/cfgs/waymo_models/centerpoint.yaml)| 73.38/72.85 | 65.28/64.79	| 74.84/68.68	| 66.90/61.24 |	72.05/70.84	| 69.43/68.26 |
-| [CenterPoint + Occupancy-MAE]()| 71.89/71.33 | 64.05/63.53	| 73.85/67.12	| 65.78/59.62 |	70.29/69.03	| 67.76/66.53 |
-| [CenterPoint + GCC-3D]()| -/- | 63.97/63.47	| -/-	| 64.23/58.47 |	-/-	| 67.68/66.44 |
+| [CenterPoint (ResNet) + R-MAE](tools/cfgs/waymo_models/centerpoint.yaml)| 73.38/72.85 | 65.28/64.79	| 74.84/68.68	| 66.90/61.24 |	72.05/70.84	| 69.43/68.26 |
 | [Voxel R-CNN (CenterHead)-Dynamic-Voxel](tools/cfgs/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel.yaml) | 76.13/75.66	|68.18/67.74	|78.20/71.98	|69.29/63.59	| 70.75/69.68	|68.25/67.21|
-| [Voxel R-CNN (CenterHead)-Dynamic-Voxel + Radial-MAE]() | 76.35/75.88	| 67.99/67.56 | 78.60/72.56	| 69.93/64.35	| 71.74/70.65	| 69.13/68.08 |
+| [Voxel R-CNN (CenterHead)-Dynamic-Voxel + R-MAE]() | 76.35/75.88	| 67.99/67.56 | 78.60/72.56	| 69.93/64.35	| 71.74/70.65	| 69.13/68.08 |
 | [PV-RCNN (AnchorHead)](tools/cfgs/waymo_models/pv_rcnn.yaml) | 75.41/74.74	|67.44/66.80	|71.98/61.24	|63.70/53.95	|65.88/64.25	|63.39/61.82 | 
-| [PV-RCNN (AnchorHead) + Radial-MAE]() | 75.70/75.05 |	67.16/66.56|	73.40/63.54| 64.47/55.63 | 67.91/66.45	|	65.40/63.99|
+| [PV-RCNN (AnchorHead) + R-MAE]() | 75.70/75.05 |	67.16/66.56|	73.40/63.54| 64.47/55.63 | 67.91/66.45	|	65.40/63.99|
 | [PV-RCNN (CenterHead)](tools/cfgs/waymo_models/pv_rcnn_with_centerhead_rpn.yaml) | 75.95/75.43	|68.02/67.54	|75.94/69.40	|67.66/61.62	|70.18/68.98	|67.73/66.57|
-| [PV-RCNN (CenterHead) + Radial-MAE]() | 76.72/76.22 |	68.38/67.92|	78.19/71.74 | 69.63/63.68 | 72.44/70.32	|	68.84/67.76|
-| [PV-RCNN + Occupancy-MAE]() | 75.94/75.28 |	67.94/67.34| 74.02/63.48 | 64.94/55.57 | 67.21/66.49 |	65.62/63.02|
-| [PVRCNN + MV-JAR]() | -/- |	61.88/61.45| -/- | 66.98/59.02 | -/- |	57.98/57.00|
-| [PVRCNN + MAELi]() | -/- |	-/67.34 | -/- | -/56.32 | -/- |	-/62.76 |
-| [PVRCNN + PropCont]() | -/- |	-/65.47 | -/- | -/49.51 | -/- |	-/62.86 |
+| [PV-RCNN (CenterHead) + R-MAE]() | 76.72/76.22 |	68.38/67.92|	78.19/71.74 | 69.63/63.68 | 72.44/70.32	|	68.84/67.76|
 
 
 Here we also provide the performance of several models trained and finetuned on 100% training set while pretraining has been the same on 20% of the data:
@@ -130,7 +186,10 @@ Here we also provide the performance of several models trained and finetuned on 
 | Performance@(train with 100\% Data)                                                       | Vec_L1 | Vec_L2 | Ped_L1 | Ped_L2 | Cyc_L1 | Cyc_L2 |  
 |-------------------------------------------------------------------------------------------|----------:|:-------:|:-------:|:-------:|:-------:|:-------:|
 | [PV-RCNN (CenterHead)](tools/cfgs/waymo_models/pv_rcnn_with_centerhead_rpn.yaml)          | 78.00/77.50 | 69.43/68.98 | 79.21/73.03 | 70.42/64.72 | 71.46/70.27 | 68.95/67.79 |
-| [PV-RCNN (CenterHead + Radial-MAE)]()          | 78.10/77.65 | 69.69/69.25 | 79.61/73.69 | 71.26/65.72 | 71.94/70.87 | 69.32/68.28 |
+| [PV-RCNN (CenterHead + R-MAE)]()          | 78.10/77.65 | 69.69/69.25 | 79.61/73.69 | 71.26/65.72 | 71.94/70.87 | 69.32/68.28 |
+
+> [!NOTE]
+> Due to licence agreement of Waymo Open Dataset, we are not allowed to release the checkpoints.
 
 
 
@@ -140,14 +199,12 @@ All models are trained with 2 RTX 6000 ADA GPUs and are available for download.
 
 |                                                                                                    | Modality |  mATE |  mASE  |  mAOE  | mAVE  | mAAE  |  mAP  |  NDS   |                                              download                                              | 
 |----------------------------------------------------------------------------------------------------|----------|------:|:------:|:------:|:-----:|:-----:|:-----:|:------:|:--------------------------------------------------------------------------------------------------:|
-| [PointPillar-MultiHead](tools/cfgs/nuscenes_models/cbgs_pp_multihead.yaml)                         | LiDAR    | 33.87 | 26.00  | 32.07  | 28.74 | 20.15 | 44.63 | 58.23  |  [model-23M](https://drive.google.com/file/d/1p-501mTWsq0G9RzroTWSXreIMyTUUpBM/view?usp=sharing)   | 
-| [SECOND-MultiHead (CBGS)](tools/cfgs/nuscenes_models/cbgs_second_multihead.yaml)                   | LiDAR    | 31.15 | 25.51  | 26.64  | 26.26 | 20.46 | 50.59 | 62.29  |  [model-35M](https://drive.google.com/file/d/1bNzcOnE3u9iooBFMk2xK7HqhdeQ_nwTq/view?usp=sharing)   |
 | [CenterPoint](tools/cfgs/nuscenes_models/cbgs_voxel01_res3d_centerpoint.yaml)     | LiDAR    | 30.11 | 25.55  | 38.28  | 21.94 | 18.87 | 56.03 | 64.54  |  [model-34M](https://drive.google.com/file/d/1Cz-J1c3dw7JAWc25KRG1XQj8yCaOlexQ/view?usp=sharing)   |
-| [CenterPoint + Radial-MAE]() | LiDAR    | 29.73 | 25.71  | 34.16  | 20.02 | 17.91 | 59.20 | 66.85  |  [model-34M]()   |
+| [CenterPoint + R-MAE]() | LiDAR    | 29.73 | 25.71  | 34.16  | 20.02 | 17.91 | 59.20 | 66.85  |  [ckpt]()   |
 | [TransFusion-L](tools/cfgs/nuscenes_models/transfusion_lidar.yaml) | LiDAR    | 27.96 | 25.37 | 29.35 | 27.31 | 18.55 | 64.58 | 69.43  | [model-32M]() |
-| [TransFusion-L + Radial-MAE]() | LiDAR    | 28.19 | 25.20  | 26.92  | 24.27 | 18.71 | 65.01 | 70.17  | [model-32M]() |
+| [TransFusion-L + R-MAE]() | LiDAR    | 28.19 | 25.20  | 26.92  | 24.27 | 18.71 | 65.01 | 70.17  | [ckpt]() |
 | [BEVFusion](tools/cfgs/nuscenes_models/bevfusion.yaml)     | LiDAR + Camera    |  28.26  |  25.43  |  28.88  |  26.80  | 18.67  |  65.91  |  70.20  | [model-157M]() |
-| [BEVFusion + Radial-MAE](tools/cfgs/nuscenes_models/bevfusion.yaml)                                | LiDAR + Camera    |  28.31  |  25.54  |  29.57  |  25.87  | 18.60  |  66.40  |  70.41  | [model-157M]() |
+| [BEVFusion + R-MAE](tools/cfgs/nuscenes_models/bevfusion.yaml)                                | LiDAR + Camera    |  28.31  |  25.54  |  29.57  |  25.87  | 18.60  |  66.40  |  70.41  | [ckpt]() |
 
 
 

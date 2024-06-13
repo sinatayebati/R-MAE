@@ -184,6 +184,11 @@ class Radial_MAE(nn.Module):
         selected_indices = []
         for angle in selected_group_angles:
             selected_indices.extend(radial_groups[angle].tolist())
+
+        # Ensure a minimum number of voxels are selected
+        min_voxels = max(1, int(0.1 * voxel_features.shape[0]))  # Ensuring at least 10% or 1 voxel is selected
+        if len(selected_indices) < min_voxels:
+            selected_indices = random.sample(range(voxel_features.shape[0]), min_voxels)
         
         # Convert list to 1-dimensional tensor
         selected_indices_tensor = torch.tensor(selected_indices, dtype=torch.long, device=voxel_coords.device)

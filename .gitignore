@@ -12,3 +12,4 @@ venv/
 *.bin
 output
 version.py
+helper.txt

@@ -2,7 +2,7 @@ nuscenes_models
 ------------------------
 
 # Pretrain with multiple GPUs:
-bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/nuscenes_models/radial_mae_res_nuscenes.yaml
+bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/nuscenes_models/radial_mae_res_nuscenes.yaml 
 
 
 # Finetune with multiple GPUs:
@@ -35,12 +35,14 @@ KITTI
 ----------------------
 
 # Pretrain with multiple GPUs:
-bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/kitti_models/radial_mae_multihead_kitti.yaml
+bash ./scripts/dist_train_mae.sh 2  --cfg_file cfgs/kitti_models/radial_mae_kitti.yaml --extra_tag sweep_angle_1
 
 
 # Finetune with multiple GPUs:
 
-bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/pv_rcnn.yaml --pretrained_model ../output/kitti_models/also_pretrained/pretrained_backbone_also_kitti3d_second_epoch_499.ckpt
+bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/pointpillar.yaml --pretrained_model ../output/kitti_models/radial_mae_kitti/sweep_angle_40/ckpt/checkpoint_epoch_10.pth --extra_tag sweep_angle_40
+bash ./scripts/dist_train_temp.sh 2 --cfg_file cfgs/kitti_models/pointpillar.yaml --extra_tag original
+
 
 
 # Eval
@@ -62,4 +64,4 @@ bash ./scripts/dist_train.sh 2 --cfg_file cfgs/waymo_models/pv_rcnn_with_centerh
 
 
 # Eval
-bash scripts/dist_test.sh 2 --cfg_file  cfgs/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel.yaml --ckpt ../output/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel/default/ckpt/checkpoint_epoch_35.pth
+bash scripts/dist_test.sh 2 --cfg_file  cfgs/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel.yaml --ckpt ../output/waymo_models/voxel_rcnn_with_centerhead_dyn_voxel/default/ckpt/checkpoint_epoch_30.pth
