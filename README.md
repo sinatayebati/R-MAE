@@ -12,8 +12,8 @@
 
 <br/>
 
-[![arXiv](https://img.shields.io/badge/arXiv-2312.02158-darkred)](https://arxiv.org/abs/2406.07833) 
-[![Project page](https://img.shields.io/badge/Project%20Page-PaSCo-darkgreen)]()
+[![arXiv](https://img.shields.io/badge/arXiv-2406.07833-blue)](https://arxiv.org/abs/2406.07833) 
+[![Project page](https://img.shields.io/badge/Project%20Page-RMAE-darkgreen)]()
 
 </div>
 
